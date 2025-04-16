@@ -1,0 +1,22 @@
+- name: Laravel Setup
+  hosts: app
+  become: false
+  tasks:
+    - name: Install Composer dependencies
+      command: composer install
+      args:
+        chdir: /var/www
+
+    - name: Generate app key
+      command: php artisan key:generate
+      args:
+        chdir: /var/www
+
+    - name: Set correct permissions
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0775'
+      loop:
+        - /var/www/storage
+        - /var/www/bootstrap/cache
