@@ -19,4 +19,8 @@
         mode: '0775'
       loop:
         - /var/www/storage
-        - /var/www/bootstrap/cache
+
+    - name: Run database migrations
+      command: php artisan migrate --force
+      args:
+        chdir: /var/www
