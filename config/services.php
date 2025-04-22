@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'porn' => [
+        'base_url' => env('PORN_API_BASE_URL', 'https://api.porn.com/api/v1/'),
+        'timeout' => env('PORN_API_TIMEOUT', 500),
+    ],
 ];
