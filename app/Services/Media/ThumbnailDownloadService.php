@@ -18,14 +18,14 @@ class ThumbnailDownloadService
         $url = $thumbnailUrl->url;
 
         if (isset($this->urlCache[$url])) {
-            $thumbnailUrl->update(['cached_path' => $this->urlCache[$url]]);
+            $thumbnailUrl->update(['local_path' => $this->urlCache[$url]]);
             return;
         }
 
         $cachedPath = $this->thumbnailService->downloadAndStore($thumbnailUrl);
         if ($cachedPath) {
             $this->urlCache[$url] = $cachedPath;
-            $thumbnailUrl->update(['cached_path' => $cachedPath]);
+            $thumbnailUrl->update(['local_path' => $cachedPath]);
         }
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class FetchPornstarsCommand extends Command
 {
-    protected $signature = 'pornstars:fetch {--force : Force fetch even if data is recent}';
+    protected $signature = 'pornstars:fetch {--chunk} {--force}';
     protected $description = 'Fetch and update pornstar data from the external API';
 
     protected ApiClientInterface $dataFetcher;
@@ -51,7 +51,6 @@ class FetchPornstarsCommand extends Command
 
                     // Process using the data processor
                     $this->dataProcessor->process($data);
-                    exit;
                     $processedCount++;
 
                     $this->info("✓ Successfully processed: {$name}");
@@ -79,7 +78,6 @@ class FetchPornstarsCommand extends Command
 
             // DB::commit();
 
-            // Show summary
             $this->newLine();
             $this->info('=== Processing Summary ===');
             $this->info("Total pornstars: " . count($data));

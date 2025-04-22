@@ -53,14 +53,12 @@ class PornstarRelationshipService implements PornstarRelationshipServiceInterfac
             return;
         }
 
-        $hairColorIds = $this->hairColorRepository->findByNames($hairColorNames);
+        $hairColorIds = [];
 
-        if (empty($hairColorIds)) {
-            foreach ($hairColorNames as $name) {
-                $hairColor = $this->hairColorRepository->findOrCreateByName($name);
-                if ($hairColor && !in_array($hairColor->id, $hairColorIds)) {
-                    $hairColorIds[] = $hairColor->id;
-                }
+        foreach ($hairColorNames as $name) {
+            $hairColor = $this->hairColorRepository->findOrCreateByName($name);
+            if ($hairColor && !in_array($hairColor->id, $hairColorIds)) {
+                $hairColorIds[] = $hairColor->id;
             }
         }
 

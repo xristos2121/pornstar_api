@@ -72,7 +72,7 @@ class HairColorRepository implements HairColorRepositoryInterface
         }
 
         try {
-           $model->$relation()->sync($existingIds);
+           $model->$relation()->syncWithoutDetaching($existingIds);
 
         } catch (\Exception $e) {
             Log::error('Failed to sync hair colors', [

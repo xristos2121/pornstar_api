@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\PornstarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Pornstar API endpoints
+Route::prefix('v1')->group(function () {
+    Route::get('/pornstars', [PornstarController::class, 'index'])->name('pornstars.index');
+    Route::get('/pornstars/search', [PornstarController::class, 'search'])->name('pornstars.search');
+    Route::get('/pornstars/{id}', [PornstarController::class, 'show'])->name('pornstars.show');
 });

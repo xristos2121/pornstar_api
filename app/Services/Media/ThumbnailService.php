@@ -24,38 +24,41 @@ class ThumbnailService implements ThumbnailServiceInterface
     {
         try {
             $url = $thumbnailUrl->url;
-
-            if (isset($this->processedUrls[$url])) {
-                if (!$thumbnailUrl->local_path) {
-                    $thumbnailUrl->update([
-                        'local_path' => $this->processedUrls[$url]
-                    ]);
-                }
-                return $this->processedUrls[$url];
+            
+            // If this specific ThumbnailUrl already has a local_path, return it
+            if ($thumbnailUrl->local_path && $this->thumbnailExists($thumbnailUrl->local_path)) {
+                return $thumbnailUrl->local_path;
             }
 
+            // For duplicate URLs in the same request, we can reuse the downloaded file
+            // but we'll create a unique filename for each ThumbnailUrl
+            $reuseContent = isset($this->processedUrls[$url]);
+            
             $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'jpg';
             $filename = $this->filenamePrefix . Str::random(40) . '.' . $extension;
 
-            $response = $this->httpClient->get($url, ['verify' => false]);
-            if (!$response->successful()) {
-                Log::error("Failed to download thumbnail", [
-                    'url' => $url,
-                    'status' => $response->status()
-                ]);
-                return null;
+            if (!$reuseContent) {
+                $response = $this->httpClient->get($url, ['verify' => false]);
+                if (!$response->successful()) {
+                    Log::error("Failed to download thumbnail", [
+                        'url' => $url,
+                        'status' => $response->status()
+                    ]);
+                    return null;
+                }
+                
+                $this->fileStorage->put($filename, $response->body());
+                $this->processedUrls[$url] = $response->body();
+            } else {
+                // Reuse the content but with a new filename
+                $this->fileStorage->put($filename, $this->processedUrls[$url]);
             }
 
-            $path = $filename;
-            $this->fileStorage->put($path, $response->body());
-
-            $this->processedUrls[$url] = $path;
-
             $thumbnailUrl->update([
-                'local_path' => $path
+                'local_path' => $filename
             ]);
 
-            return $path;
+            return $filename;
         } catch (\Exception $e) {
             Log::error("Error storing thumbnail", [
                 'url' => $thumbnailUrl->url ?? null,

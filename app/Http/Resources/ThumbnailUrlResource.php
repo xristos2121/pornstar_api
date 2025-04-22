@@ -9,10 +9,13 @@ class ThumbnailUrlResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $host = $request->getSchemeAndHttpHost();
+        $fullUrl = $this->local_path
+            ? $host . '/storage/thumbnails/' . $this->local_path
+            : $this->url;
+
         return [
-            'id' => $this->id,
-            'url' => $this->url,
-            'local_path' => $this->local_path,
+            'url' => $fullUrl
         ];
     }
 }
