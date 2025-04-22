@@ -24,8 +24,6 @@ class PornstarAttribute extends Model
     protected $casts = [
         'tattoos' => 'boolean',
         'piercings' => 'boolean',
-        'breast_size' => 'boolean',
-        'breast_type' => 'boolean',
         'age' => 'integer'
     ];
 

@@ -17,12 +17,12 @@ class Pornstar extends Model
         'name',
         'license',
         'wl_status',
-        'link',
+        'link'
     ];
 
     protected $casts = [
-        'wl_status' => 'boolean',
         'external_id' => 'integer',
+        'wl_status' => 'boolean'
     ];
 
     public function attributes(): HasOne

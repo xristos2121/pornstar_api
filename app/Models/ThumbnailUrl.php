@@ -13,7 +13,7 @@ class ThumbnailUrl extends Model
     protected $fillable = [
         'thumbnail_id',
         'url',
-        'cached_path'
+        'local_path'
     ];
 
     public function thumbnail(): BelongsTo

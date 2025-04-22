@@ -16,7 +16,7 @@ class ThumbnailUrlFactory extends Factory
     {
         return [
             'url' => fake()->imageUrl(),
-            'cached_path' => fake()->optional()->filePath()
+            'local_path' => fake()->optional()->filePath()
         ];
     }
 }
