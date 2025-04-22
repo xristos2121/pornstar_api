@@ -12,15 +12,80 @@
       args:
         chdir: /var/www
 
+    - name: Create storage link
+      command: php artisan storage:link
+      args:
+        chdir: /var/www
+      ignore_errors: yes
+
     - name: Set correct permissions
       file:
         path: "{{ item }}"
         state: directory
         mode: '0775'
+        recurse: yes
       loop:
         - /var/www/storage
+        - /var/www/bootstrap/cache
+
+    - name: Create thumbnails directory
+      file:
+        path: /var/www/storage/app/public/thumbnails
+        state: directory
+        mode: '0775'
 
     - name: Run database migrations
       command: php artisan migrate --force
       args:
         chdir: /var/www
+
+    - name: Clear application cache
+      command: php artisan cache:clear
+      args:
+        chdir: /var/www
+
+    - name: Clear route cache
+      command: php artisan route:clear
+      args:
+        chdir: /var/www
+
+    - name: Clear config cache
+      command: php artisan config:clear
+      args:
+        chdir: /var/www
+
+    - name: Clear view cache
+      command: php artisan view:clear
+      args:
+        chdir: /var/www
+
+    - name: Optimize application
+      command: php artisan optimize
+      args:
+        chdir: /var/www
+
+    - name: Ensure log directory exists
+      file:
+        path: /var/www/storage/logs
+        state: directory
+        mode: '0775'
+
+    - name: Create scheduler log file
+      file:
+        path: /var/www/storage/logs/scheduler.log
+        state: touch
+        mode: '0664'
+
+    - name: Restart queue worker
+      command: php artisan queue:restart
+      args:
+        chdir: /var/www
+
+    - name: Start Laravel server
+      command: php artisan serve --host=0.0.0.0 --port=8000
+      async: 1000
+      poll: 0
+      args:
+        chdir: /var/www
+      register: server_process
+      ignore_errors: yes
