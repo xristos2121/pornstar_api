@@ -16,11 +16,11 @@ return new class extends Migration
             $table->foreignId('pornstar_id')->constrained()->onDelete('cascade');
             $table->boolean('tattoos')->default(false);
             $table->boolean('piercings')->default(false);
-            $table->boolean('breast_size')->default(false);
-            $table->boolean('breast_type')->default(false);
+            $table->string('breast_size')->nullable();
+            $table->string('breast_type')->nullable();
             $table->string('orientation');
             $table->string('gender');
-            $table->integer('age');
+            $table->integer('age')->nullable();
             $table->timestamps();
         });
     }

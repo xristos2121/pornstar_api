@@ -24,7 +24,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('thumbnail_id')->constrained()->onDelete('cascade');
             $table->string('url');
-            $table->string('cached_path')->nullable();
+            $table->string('local_path')->nullable();
             $table->timestamps();
         });
     }

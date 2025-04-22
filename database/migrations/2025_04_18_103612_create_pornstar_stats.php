@@ -20,9 +20,9 @@ return new class extends Migration
             $table->integer('videos_count')->default(0);
             $table->integer('premium_videos_count')->default(0);
             $table->integer('white_label_videos_count')->default(0);
-            $table->integer('rank')->default(0);
-            $table->integer('rank_premium')->default(0);
-            $table->integer('rank_wl')->default(0);
+            $table->integer('rank')->nullable();
+            $table->integer('rank_premium')->nullable();
+            $table->integer('rank_wl')->nullable();
             $table->timestamps();
         });
     }
