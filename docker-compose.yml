@@ -23,6 +23,32 @@ services:
             - "3307:3306"
         volumes:
             - dbdata:/var/lib/mysql
+            
+    scheduler:
+        build:
+            context: .
+        container_name: pornstar_scheduler
+        volumes:
+            - .:/var/www
+        working_dir: /var/www
+        depends_on:
+            - app
+            - mysql
+        command: bash -c "while true; do php artisan schedule:run --verbose >> /var/www/storage/logs/scheduler.log 2>&1; sleep 60; done"
+        restart: unless-stopped
+        
+    queue:
+        build:
+            context: .
+        container_name: pornstar_queue
+        volumes:
+            - .:/var/www
+        working_dir: /var/www
+        depends_on:
+            - app
+            - mysql
+        command: php artisan queue:work --queue=fetching,default --tries=3 --timeout=14400 --sleep=3 --max-time=86400
+        restart: unless-stopped
 
 volumes:
     dbdata:

@@ -12,7 +12,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->job(new \App\Jobs\FetchPornstarsJob())
+                ->daily()
+                ->at('00:00')
+                ->withoutOverlapping()
+                ->appendOutputTo(storage_path('logs/scheduler.log'));
     }
 
     /**
