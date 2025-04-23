@@ -54,6 +54,12 @@
       args:
         chdir: /var/www
 
+    - name: Ensure compiled views directory exists
+      file:
+        path: /var/www/storage/framework/views
+        state: directory
+        mode: '0775'
+
     - name: Clear view cache
       command: php artisan view:clear
       args:
